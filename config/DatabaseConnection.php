@@ -1,22 +1,17 @@
 <?php
+$db_host = "demoprojekt-server.mysql.database.azure.com"; // Adres IP lub nazwa hosta bazy danych
+$db_user = "dwvklagjyb@demoprojekt"; // Nazwa użytkownika bazy danych
+$db_pass = "bTiwqIMMa3KjdQpfnnFZlL6wbl1DYj6jckjavjkqMRYo7nurDlyaZfcMNAB"; // Hasło do bazy danych
+$db_name = "demoprojekt"; // Nazwa bazy danych
 
-namespace config;
+$conn = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
-class DatabaseConnection
-{
+// Ustawienia SSL - zakładając, że certyfikat jest w katalogu głównym projektu
+$conn->ssl_set(NULL, NULL, dirname(__DIR__) . "/DigiCertGlobalRootG2.crt.pem", NULL, NULL);
 
-    private $host = 'localhost';
-    private $username ='root';
-    private $password = '';
-    private $database = 'todo_list';
-    private $connection;
-
-
-    public function getConnection()
-    {
-        return new \PDO("mysql:host=$this->host;dbname=$this->database", $this->username, $this->password);
-    }
-
-
-
+// Sprawdź połączenie po ustawieniu SSL
+if (!$conn->real_connect($db_host, $db_user, $db_pass, $db_name, 3306, NULL, MYSQLI_CLIENT_SSL)) {
+    die("Connection failed: " . $conn->connect_error);
 }
+echo "Connected successfully";
+?>
